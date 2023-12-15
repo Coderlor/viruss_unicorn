@@ -75,9 +75,4 @@ Help Menu: python unicorn.py --help
 ```
 
 
-You may notice that some of the commands use "{ QUOTE" these are ways of masking specific commands
-which is documented here: http://staaldraad.github.io/2017/10/23/msword-field-codes/. In this case
-we are changing WindowsPowerShell, powershell.exe, and IEX to avoid detection. Also check out the URL
-as it has some great methods for not calling DDE at all.
-
 
