@@ -1,12 +1,6 @@
 unicorn
 =======
 
-Written by: Dave Kennedy (@HackingDave)
-Website: https://www.trustedsec.com
-
-Magic Unicorn is a simple tool for using a PowerShell downgrade attack and inject shellcode straight into memory. Based on Matthew Graeber's powershell attacks and the powershell bypass technique presented by David Kennedy (TrustedSec) and Josh Kelly at Defcon 18.
-
-Usage is simple, just run Magic Unicorn (ensure Metasploit is installed if using Metasploit methods and in the right path) and magic unicorn will automatically generate a powershell command that you need to simply cut and paste the powershell code into a command line window or through a payload delivery system. Unicorn supports your own shellcode, cobalt strike, and Metasploit.
 ```
 root@rel1k:~/Desktop# python unicorn.py 
 
@@ -312,10 +306,6 @@ Then move the contents of the hta_attack to /var/www/html.
 
 Once the victim either clicks the .SettingContent-ms file, mshta will be called on the victim machine
 then download the Unicorn HTA file which has the code execution capabilites. 
-
-Special thanks and kudos to Matt Nelson for the awesome research
-
-Also check out: https://www.trustedsec.com/2018/06/weaponizing-settingcontent/
 
 Usage: 
 
