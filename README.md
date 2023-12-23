@@ -50,9 +50,6 @@ aHR0cHM6Ly93d3cuYmluYXJ5ZGVmZW5zZS5jb20vd3AtY29udGVudC91cGxvYWRzLzIwMTcvMDUvS2Vl
 -------------------- Magic Unicorn Test Vector -----------------------------
 
 Native x86 powershell injection attacks on any Windows platform.
-Written by: Dave Kennedy at TrustedSec (https://www.trustedsec.com)
-Twitter: @TrustedSec, @HackingDave
-Credits: Matthew Graeber, Justin Elze, Chris Gates
 
 Happy Magic Unicorns.
 
