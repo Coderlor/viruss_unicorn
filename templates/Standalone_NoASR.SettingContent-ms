@@ -1,18 +1,23 @@
+//Khai báo phiên bản XML và mã hóa ký tự sử dụng là UTF-8.
 <?xml version="1.0" encoding="UTF-8"?>
-<PCSettings>
+<PCSettings> //Phần chính của tệp XML, chứa tất cả cấu hình liên quan đến tìm kiếm.
+  //Định nghĩa namespace cho các phần tử bên trong, sử dụng namespace từ Microsoft cho nội dung cài đặt tìm kiếm.
   <SearchableContent xmlns="http://schemas.microsoft.com/Search/2013/SettingContent">
-    <ApplicationInformation>
+    <ApplicationInformation> //Chứa thông tin về ứng dụng cụ thể.
+      //ID định danh của ứng dụng (Immersive Control Panel của Windows).
       <AppID>windows.immersivecontrolpanel_cw5n1h2txyewy!microsoft.windows.immersivecontrolpanel</AppID>
+      //Đường dẫn sâu (deep link) tới ứng dụng. Trong trường hợp này, giá trị được thay đổi và chứa đường dẫn. Đây là một địa chỉ cụ thể sẽ được thay thế vào "REPLACECOOLSTUFFHERE" khi cần thiết.
       <DeepLink>C:\windows\system32\REPLACECOOLSTUFFHERE</DeepLink>
+      //Đường dẫn tới biểu tượng của ứng dụng, trong trường hợp này là C:\windows\system32\control.exe.
       <Icon>C:\windows\system32\control.exe</Icon>
     </ApplicationInformation>
-    <SettingIdentity>
-      <PageID></PageID>
-      <HostID>{12B1697E-D3A0-4DBC-B568-CCF64A3F934D}</HostID>
+    <SettingIdentity> //Chứa thông tin định danh của cài đặt.
+      <PageID></PageID> //ID của trang liên quan đến cài đặt (trong trường hợp này là trống).
+      <HostID>{12B1697E-D3A0-4DBC-B568-CCF64A3F934D}</HostID> //ID của máy chủ (host) liên quan đến cài đặt.
     </SettingIdentity>
-    <SettingInformation>
-      <Description>@shell32.dll,-4161</Description>
-      <Keywords>@shell32.dll,-4161</Keywords>
+    <SettingInformation> //Chứa thông tin mô tả và từ khóa liên quan đến cài đặt.
+      <Description>@shell32.dll,-4161</Description> //Mô tả cài đặt, trong trường hợp này, là @shell32.dll,-4161.
+      <Keywords>@shell32.dll,-4161</Keywords> //Từ khóa liên quan đến cài đặt, cũng là @shell32.dll,-4161.
     </SettingInformation>
   </SearchableContent>
 </PCSettings>
