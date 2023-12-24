@@ -1,4 +1,4 @@
-#Dòng này chỉ đơn giản là khai báo phiên bản XML và mã hóa ký tự sử dụng là UTF-8.
+//Dòng này chỉ đơn giản là khai báo phiên bản XML và mã hóa ký tự sử dụng là UTF-8.
 <?xml version="1.0" encoding="UTF-8"?> 
 <PCSettings> //Đây là phần chính của tệp XML và bao gồm tất cả các cấu hình liên quan đến việc tìm kiếm.
   //Đây là phần định nghĩa namespace cho các phần tử bên trong. Trong trường hợp này, nó sử dụng namespace từ Microsoft cho nội dung cài đặt tìm kiếm.
