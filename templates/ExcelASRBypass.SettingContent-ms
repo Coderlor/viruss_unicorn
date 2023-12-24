@@ -1,19 +1,24 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<PCSettings>
-  <SearchableContent xmlns="http://schemas.microsoft.com/Search/2013/SettingContent">
-    <ApplicationInformation>
+//Dòng này chỉ đơn giản là khai báo phiên bản XML và mã hóa ký tự sử dụng là UTF-8.
+<?xml version="1.0" encoding="UTF-8"?> 
+<PCSettings> //Đây là phần chính của tệp XML và bao gồm tất cả các cấu hình liên quan đến việc tìm kiếm.
+  //Đây là phần định nghĩa namespace cho các phần tử bên trong. Trong trường hợp này, nó sử dụng namespace từ Microsoft cho nội dung cài đặt tìm kiếm.
+  <SearchableContent xmlns="http://schemas.microsoft.com/Search/2013/SettingContent"> 
+    <ApplicationInformation> //Đây là phần chứa thông tin về ứng dụng cụ thể.
+	//Một ID định danh ứng dụng, đây là ID cho "Immersive Control Panel" của Windows.
       <AppID>windows.immersivecontrolpanel_cw5n1h2txyewy!microsoft.windows.immersivecontrolpanel</AppID>
+	//Một đường dẫn sâu (deep link) tới ứng dụng. Trong trường hợp này, nó mở Command Prompt (cmd.exe) và thực thi Calculator (calc.exe) từ đường dẫn C:\Program Files\Microsoft Office\root\Client\AppVLP.exe.
       <DeepLink>C:\Program Files\Microsoft Office\root\Client\AppVLP.exe" C:\Windows\System32\cmd.exe /c calc.exe</DeepLink>
+	//Đường dẫn tới biểu tượng của ứng dụng, trong trường hợp này, là C:\windows\system32\control.exe.
       <Icon>C:\windows\system32\control.exe</Icon>
-    </ApplicationInformation>
-    <SettingIdentity>
-      <PageID></PageID>
-      <HostID>{12B1697E-D3A0-4DBC-B568-CCF64A3F934D}</HostID>
-    </SettingIdentity>
-    <SettingInformation>
-      <Description>@shell32.dll,-4161</Description>
-      <Keywords>@shell32.dll,-4161</Keywords>
-    </SettingInformation>
+    </ApplicationInformation> //Đây là phần chứa thông tin về ứng dụng cụ thể.
+    <SettingIdentity> //Phần này chứa thông tin định danh của cài đặt.
+      <PageID></PageID> //ID của trang liên quan đến cài đặt (trong trường hợp này là trống).
+      <HostID>{12B1697E-D3A0-4DBC-B568-CCF64A3F934D}</HostID> //ID của máy chủ (host) liên quan đến cài đặt.
+    </SettingIdentity> //Phần này chứa thông tin định danh của cài đặt.
+    <SettingInformation> //Phần này chứa thông tin mô tả và từ khóa liên quan đến cài đặt.
+      <Description>@shell32.dll,-4161</Description> //Mô tả cài đặt, trong trường hợp này, là @shell32.dll,-4161.
+      <Keywords>@shell32.dll,-4161</Keywords> //Từ khóa liên quan đến cài đặt, cũng là @shell32.dll,-4161.
+    </SettingInformation> //Phần này chứa thông tin mô tả và từ khóa liên quan đến cài đặt.
   </SearchableContent>
-</PCSettings>
+</PCSettings> //Đây là phần chính của tệp XML và bao gồm tất cả các cấu hình liên quan đến việc tìm kiếm.
 	
