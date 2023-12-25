@@ -920,7 +920,7 @@ def gen_shellcode_attack(payload, ipaddr, port):
     # Randomization của tên dịch vụ: randomize_service_name là một chuỗi ngẫu nhiên có độ dài 2 được tạo bằng hàm generate_random_string(2,2). Điều này có thể được sử dụng để tạo tên dịch vụ ngẫu nhiên hoặc một biến trong đoạn mã sau
     randomize_service_name = generate_random_string(2,2)
 
-    # Randomization của chiều dài của chuỗi ngẫu nhiên: random_length là một số ngẫu nhiên được tạo bằng hàm generate_random_number(1,12). Tuy nhiên, hiện tại đoạn mã này không sử dụng random_length ở đâu cả.
+    # Randomization của chiều dài của chuỗi ngẫu nhiên: random_length là một số ngẫu nhiên được tạo bằng hàm generate_random_number(1,12).
     random_length = generate_random_number(1,12)
 
     # Randomization của tên biến: full_command là một biến được tạo với tên ngẫu nhiên, có thể được sử dụng để chứa một phần của đoạn mã hoặc tên biến khác. 
